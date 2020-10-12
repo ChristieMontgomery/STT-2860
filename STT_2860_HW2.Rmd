@@ -1,0 +1,111 @@
+---
+title: "STT_2860_HW2"
+author: "Christie Montgomery"
+date: "10/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+```
+
+**Section 7.3.4 - Exercise 2**
+
+Explore the distribution of price. Do you discover anything unusual or surprising? (Hint: Carefully think about the binwidth and make sure you try a wide range of values.)
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x=price), binwidth = 100)
+``` 
+
+The smaller the value of the binwidth the longer it took the computer to process and create the histogram. When RStudio could actually display a graph when utilizing a larger binwidth, it appeared that the lower prices had more diamonds, and once the price went up there was less and less supply of diamonds. 
+
+**Section 7.5.1.1 - Exercise 1**
+
+Use what you’ve learned to improve the visualization of the departure times of cancelled vs. non-cancelled flights.
+
+```{r}
+library(nycflights13)
+glimpse(flights)
+
+nycflights13 :: flights %>%
+  mutate(
+    cancelled = is.na(dep_time),
+    sched_hour = sched_dep_time %/% 100,
+    sched_min = sched_dep_time%% 100,
+    sched_dep_time = sched_hour + sched_min / 60
+  )%>%
+  ggplot(mapping = aes(sched_dep_time)) +
+  geom_boxplot(mapping = aes(colour = cancelled))
+```
+
+When one of the variables is categorical and the other is quantitative, a good graph to use to represent the data is a side by side boxplot. So I decided to change the graph from a frequency polygons to a side by side boxplot to better depict the data and make it more readable. 
+
+
+**Section 7.5.1.1 - Exercise 2**
+
+What variable in the diamonds dataset is most important for predicting the price of a diamond? How is that variable correlated with cut? Why does the combination of those two relationships lead to lower quality diamonds being more expensive?
+
+```{r}
+#View(diamonds)
+
+glimpse(diamonds)
+```
+
+A couple of variables that could be the best predictor could be carat, cut, color, clarity, and depth. 
+
+**Carat**
+```{r}
+ggplot(diamonds, aes(x = price, y = carat)) +
+  geom_point()
+```
+
+**Depth**
+```{r}
+ggplot(diamonds, aes(x = price, y = depth)) +
+  geom_point()
+```
+
+**Cut**
+```{r}
+ggplot(diamonds, aes(y = price)) +
+  geom_boxplot(mapping = aes(color = cut))
+```
+
+**Color**
+```{r}
+ggplot(diamonds, aes(y = price)) +
+  geom_boxplot(mapping = aes(color = color))
+```
+
+**Clarity**
+```{r}
+ggplot(diamonds, aes(y = price)) +
+  geom_boxplot(mapping = aes(color = clarity))
+```
+
+Hints: Use `glimpse`, Price is quantitative, how to represent the relationship prices with each of these predictors, if predictor is quantitative then use scatter plot, if predictor is categorical then use boxplot where price is on the y-axis, sequence of plots, find out which predictor has the strongest relationship with price
+
+
+Carat is the most important variable within the diamond dataset for predicting the price of the diamond. 
+
+**Carat vs. Cut**
+```{r}
+ggplot(diamonds, aes(y = carat)) +
+  geom_boxplot(mapping = aes(color = cut))
+```
+
+The above graph seems to suggest that diamonds that have a fair cut have the most carats, as the median is above all other cuts, and has the highest outliers. A poor cut that is larger can potentially sell for more than a better cut but overall smaller diamond. If the diamond is bigger than it has more room to contain more carat's leading to a more expensive diamond in price, even if the cut is fair. This also shows that cut is probably not the best predictor to determine the price of the diamond. The relationship between carat and cut could easily just be a coincidence, and just be completely random that the graph shows lower quality diamonds being more expensive. 
+
+
+
+
+
+
+
+
+
+
